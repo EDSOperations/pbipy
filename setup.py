@@ -13,15 +13,15 @@ from setuptools.command.test import test as TestCommand
 
 
 requires = [
-    "python-dateutil==2.8.2",
-    "requests==2.28.1",
+    "python-dateutil>=2.8.2,<3.0.0",
+    "requests>=2.28.1,<3.0.0",
 ]
 
 extras = {"dev":["black"]}
 
 test_requirements = [
-    "pytest==7.1.3",
-    "responses==0.21.0",
+    "pytest>=7.1.3,<8.0.0",
+    "responses>=0.21.0,<1.0.0",
 ]
 
 about = {}

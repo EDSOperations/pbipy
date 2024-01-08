@@ -263,16 +263,16 @@ class Dataset(Resource):
         )
 
     def refresh(
-        self,
-        notify_option: str,
-        apply_refresh_policy: bool = None,
-        commit_mode: str = None,
-        effective_date: str = None,
-        max_parallelism: int = None,
-        objects: list[dict] = None,
-        retry_count: int = None,
-        type: str = None,
-    ) -> None:
+            self,
+            notify_option: str,
+            apply_refresh_policy: bool = None,
+            commit_mode: str = None,
+            effective_date: str = None,
+            max_parallelism: int = None,
+            objects: list[dict] = None,
+            retry_count: int = None,
+            type: str = None,
+    ) -> str:
         """
         Trigger a refresh of the dataset. An enhanced refresh is triggered
         only if a request option other than `notify_option` is set.
@@ -309,6 +309,11 @@ class Dataset(Resource):
            The type of processing to perform, e.g., "Automatic", "Calculate",
            "ClearValues", "DataOnly", "Defragment", or "Full".
 
+        Returns
+        -------
+        `str`
+            Response Header RequestId value
+
         Notes
         -----
         See here for request options in greater detail:
@@ -330,11 +335,15 @@ class Dataset(Resource):
         prepared_request = _utils.remove_no_values(refresh_request)
         resource = self.base_path + "/refreshes"
 
-        _utils.post(
+        response = _utils.post(
             resource,
             self.session,
             prepared_request,
         )
+
+        request_id = response.headers["RequestId"]
+
+        return request_id
 
     def refresh_details(
         self,

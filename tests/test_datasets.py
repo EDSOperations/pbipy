@@ -624,8 +624,10 @@ def test_refresh_call_simple():
     responses.post(
         "https://api.powerbi.com/v1.0/myorg/datasets/cfafbeb1-8037-4d0c-896e-a46fb27ff229/refreshes",
         match=[
+            matchers.header_matcher({"RequestId": "a2bf120c-7604-44ac-b440-d34977c97774"}),
             matchers.json_params_matcher(json_parms),
         ],
+        adding_headers={"RequestId": "a2bf120c-7604-44ac-b440-d34977c97774"},
     )
 
     dataset = Dataset(
@@ -633,7 +635,9 @@ def test_refresh_call_simple():
         session=requests.Session(),
     )
 
-    dataset.refresh(notify_option="MailOnFailure")
+    request_id = dataset.refresh(notify_option="MailOnFailure")
+
+    assert request_id == "a2bf120c-7604-44ac-b440-d34977c97774"
 
 
 @responses.activate
@@ -655,8 +659,10 @@ def test_refresh_call_complex():
     responses.post(
         "https://api.powerbi.com/v1.0/myorg/datasets/cfafbeb1-8037-4d0c-896e-a46fb27ff229/refreshes",
         match=[
+            matchers.header_matcher({"RequestId": "a2bf120c-7604-44ac-b440-d34977c97774"}),
             matchers.json_params_matcher(json_parms),
         ],
+        adding_headers={"RequestId": "a2bf120c-7604-44ac-b440-d34977c97774"},
     )
 
     dataset = Dataset(
@@ -664,7 +670,7 @@ def test_refresh_call_complex():
         session=requests.Session(),
     )
 
-    dataset.refresh(
+    request_id = dataset.refresh(
         notify_option="MailOnFailure",
         retry_count=3,
         type="full",
@@ -677,6 +683,8 @@ def test_refresh_call_complex():
             },
         ],
     )
+
+    assert request_id == "a2bf120c-7604-44ac-b440-d34977c97774"
 
 
 @responses.activate
